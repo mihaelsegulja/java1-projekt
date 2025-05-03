@@ -1,29 +1,6 @@
-CREATE DATABASE dbMovieManagementSystem
+CREATE DATABASE dbName
 GO
 
-USE dbMovieManagementSystem
+USE dbName
 GO
 
-CREATE TABLE [Actor] (
-	
-)
-GO
-
-CREATE TABLE [Movie] (
-	
-)
-GO
-
-CREATE TABLE [Director] (
-	
-)
-GO
-
-CREATE TABLE [User] (
-	
-)
-GO
-
-CREATE TABLE [Genre] (
-	
-)
