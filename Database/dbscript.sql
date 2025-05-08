@@ -1,6 +1,0 @@
-CREATE DATABASE dbName
-GO
-
-USE dbName
-GO
-
