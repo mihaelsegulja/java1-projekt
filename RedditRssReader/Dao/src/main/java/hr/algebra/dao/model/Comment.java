@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author miki
  */
-public final class Post {
+public final class Comment {
     
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     
@@ -20,35 +20,29 @@ public final class Post {
     private String title;
     private int authorId;
     private String link;
-    private String thumbnailLink;
     private String content;
-    private LocalDateTime publishedDate;
     private LocalDateTime updatedDate;
     private String subredditName;
 
-    public Post() { }
+    public Comment() { }
 
-    public Post(int id, String redditId, String title, int authorId, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Comment(int id, String redditId, String title, int authorId, String link, String content, LocalDateTime updatedDate, String subredditName) {
         this.id = id;
         this.redditId = redditId;
         this.title = title;
         this.authorId = authorId;
         this.link = link;
-        this.thumbnailLink = thumbnailLink;
         this.content = content;
-        this.publishedDate = publishedDate;
         this.updatedDate = updatedDate;
         this.subredditName = subredditName;
     }
 
-    public Post(String redditId, String title, int authorId, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Comment(String redditId, String title, int authorId, String link, String content, LocalDateTime updatedDate, String subredditName) {
         this.redditId = redditId;
         this.title = title;
         this.authorId = authorId;
         this.link = link;
-        this.thumbnailLink = thumbnailLink;
         this.content = content;
-        this.publishedDate = publishedDate;
         this.updatedDate = updatedDate;
         this.subredditName = subredditName;
     }
@@ -93,28 +87,12 @@ public final class Post {
         this.link = link;
     }
 
-    public String getThumbnailLink() {
-        return thumbnailLink;
-    }
-
-    public void setThumbnailLink(String thumbnailLink) {
-        this.thumbnailLink = thumbnailLink;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public LocalDateTime getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(LocalDateTime publishedDate) {
-        this.publishedDate = publishedDate;
     }
 
     public LocalDateTime getUpdatedDate() {
