@@ -6,7 +6,7 @@ GO
 
 CREATE TABLE [User] (
   [Id] int IDENTITY(1,1) PRIMARY KEY,
-  [Username] nvarchar(50) NOT NULL,
+  [Username] nvarchar(50) UNIQUE NOT NULL,
   [PasswordHash] nvarchar(255) NOT NULL,
   [PasswordSalt] nvarchar(255) NOT NULL,
   [UserRoleId] int NOT NULL
@@ -261,7 +261,7 @@ CREATE PROC spSelectPost
   @Id int
 AS
 BEGIN
-  SELECT p.*, a.Name AS AuthorName, a.Link AS AuthorLink
+  SELECT p.*, a.Id AS AuthorId, a.Name AS AuthorName, a.Link AS AuthorLink
   FROM [Post] p
   LEFT JOIN [Author] a ON p.AuthorId = a.Id
   WHERE p.Id = @Id
@@ -271,7 +271,7 @@ GO
 CREATE PROC spSelectPosts
 AS
 BEGIN
-  SELECT p.*, a.Name AS AuthorName, a.Link AS AuthorLink
+  SELECT p.*, a.Id AS AuthorId, a.Name AS AuthorName, a.Link AS AuthorLink
   FROM [Post] p
   LEFT JOIN [Author] a ON p.AuthorId = a.Id
 END
@@ -281,7 +281,7 @@ CREATE PROC spSelectPostsBySubreddit
   @SubredditName nvarchar(255)
 AS
 BEGIN
-  SELECT p.*, a.Name AS AuthorName, a.Link AS AuthorLink
+  SELECT p.*, a.Id AS AuthorId, a.Name AS AuthorName, a.Link AS AuthorLink
   FROM [Post] p
   LEFT JOIN [Author] a ON p.AuthorId = a.Id
   WHERE p.SubredditName = @SubredditName
@@ -371,7 +371,7 @@ CREATE PROC spSelectComment
   @Id int
 AS
 BEGIN
-  SELECT c.*, a.Name AS AuthorName, a.Link AS AuthorLink
+  SELECT c.*, a.Id AS AuthorId, a.Name AS AuthorName, a.Link AS AuthorLink
   FROM [Comment] c
   LEFT JOIN [Author] a ON c.AuthorId = a.Id
   WHERE c.Id = @Id
@@ -381,7 +381,7 @@ GO
 CREATE PROC spSelectComments
 AS
 BEGIN
-  SELECT c.*, a.Name AS AuthorName, a.Link AS AuthorLink
+  SELECT c.*, a.Id AS AuthorId, a.Name AS AuthorName, a.Link AS AuthorLink
   FROM [Comment] c
   LEFT JOIN [Author] a ON c.AuthorId = a.Id
 END
@@ -391,7 +391,7 @@ CREATE PROC spSelectCommentsByPost
   @PostId int
 AS
 BEGIN
-  SELECT c.*, a.Name AS AuthorName, a.Link AS AuthorLink
+  SELECT c.*, a.Id AS AuthorId, a.Name AS AuthorName, a.Link AS AuthorLink
   FROM [Comment] c
   LEFT JOIN [Author] a ON c.AuthorId = a.Id
   WHERE c.RedditId IN (
@@ -401,3 +401,16 @@ END
 GO
 
 -- Comment CRUD End
+
+CREATE PROC spDeleteAll
+AS
+BEGIN
+  DELETE FROM [Author]
+  DELETE FROM [Comment]
+  DELETE FROM [Post]
+
+  DBCC CHECKIDENT ('[Author]', RESEED, 0)
+  DBCC CHECKIDENT ('[Comment]', RESEED, 0)
+  DBCC CHECKIDENT ('[Post]', RESEED, 0)
+END
+GO
