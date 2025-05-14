@@ -22,7 +22,7 @@ public interface Repository {
     void updateUser(int id, User user) throws Exception;
     void deleteUser(int id) throws Exception;
     Optional<User> selectUser(int id) throws Exception;
-    List<User> selectUsers() throws Exception;
+    List<User> selectUsers() throws Exception; // might not need it
     
     // Author CRUD
     int createAuthor(Author author) throws Exception;
@@ -47,4 +47,9 @@ public interface Repository {
     void deleteComment(int id) throws Exception;
     Optional<Comment> selectComment(int id) throws Exception;
     List<Comment> selectComments() throws Exception;
+    
+    // Additional helpers
+    List<Post> selectPostsBySubreddit(String subredditName) throws Exception;
+    List<Comment> selectCommentsbyPost(int postId) throws Exception;
+    void deleteAll() throws Exception;
 }

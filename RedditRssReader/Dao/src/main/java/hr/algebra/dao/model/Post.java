@@ -6,6 +6,7 @@ package hr.algebra.dao.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  *
@@ -18,7 +19,7 @@ public final class Post {
     private int id;
     private String redditId;
     private String title;
-    private int authorId;
+    private Author author;
     private String link;
     private String thumbnailLink;
     private String content;
@@ -28,11 +29,11 @@ public final class Post {
 
     public Post() { }
 
-    public Post(int id, String redditId, String title, int authorId, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Post(int id, String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
         this.id = id;
         this.redditId = redditId;
         this.title = title;
-        this.authorId = authorId;
+        this.author = author;
         this.link = link;
         this.thumbnailLink = thumbnailLink;
         this.content = content;
@@ -41,10 +42,10 @@ public final class Post {
         this.subredditName = subredditName;
     }
 
-    public Post(String redditId, String title, int authorId, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Post(String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
         this.redditId = redditId;
         this.title = title;
-        this.authorId = authorId;
+        this.author = author;
         this.link = link;
         this.thumbnailLink = thumbnailLink;
         this.content = content;
@@ -77,14 +78,14 @@ public final class Post {
         this.title = title;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
-
+    
     public String getLink() {
         return link;
     }
@@ -132,4 +133,29 @@ public final class Post {
     public void setSubredditName(String subredditName) {
         this.subredditName = subredditName;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.id;
+        hash = 97 * hash + Objects.hashCode(this.redditId);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Post other = (Post) obj;
+        return this.id == other.id;
+    }
+    
+    
 }

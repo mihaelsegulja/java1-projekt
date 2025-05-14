@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hr.algebra.dao.model;
+package hr.algebra.rrrapp.parser.rss;
 
+import hr.algebra.dao.model.Author;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
  *
  * @author miki
  */
-public final class Comment {
+public class Entry {
     
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     
@@ -21,29 +22,36 @@ public final class Comment {
     private String title;
     private Author author;
     private String link;
+    private String thumbnailLink;
     private String content;
+    private LocalDateTime publishedDate;
     private LocalDateTime updatedDate;
     private String subredditName;
 
-    public Comment() { }
+    public Entry() {
+    }
 
-    public Comment(int id, String redditId, String title, Author author, String link, String content, LocalDateTime updatedDate, String subredditName) {
+    public Entry(int id, String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
         this.id = id;
         this.redditId = redditId;
         this.title = title;
         this.author = author;
         this.link = link;
+        this.thumbnailLink = thumbnailLink;
         this.content = content;
+        this.publishedDate = publishedDate;
         this.updatedDate = updatedDate;
         this.subredditName = subredditName;
     }
-    
-    public Comment(String redditId, String title, Author author, String link, String content, LocalDateTime updatedDate, String subredditName) {
+
+    public Entry(String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
         this.redditId = redditId;
         this.title = title;
         this.author = author;
         this.link = link;
+        this.thumbnailLink = thumbnailLink;
         this.content = content;
+        this.publishedDate = publishedDate;
         this.updatedDate = updatedDate;
         this.subredditName = subredditName;
     }
@@ -88,12 +96,28 @@ public final class Comment {
         this.link = link;
     }
 
+    public String getThumbnailLink() {
+        return thumbnailLink;
+    }
+
+    public void setThumbnailLink(String thumbnailLink) {
+        this.thumbnailLink = thumbnailLink;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public LocalDateTime getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(LocalDateTime publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     public LocalDateTime getUpdatedDate() {
@@ -114,9 +138,8 @@ public final class Comment {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 41 * hash + this.id;
-        hash = 41 * hash + Objects.hashCode(this.redditId);
+        int hash = 5;
+        hash = 59 * hash + this.id;
         return hash;
     }
 
@@ -131,9 +154,10 @@ public final class Comment {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Comment other = (Comment) obj;
-        return this.id == other.id;
+        final Entry other = (Entry) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return Objects.equals(this.redditId, other.redditId);
     }
-    
-    
 }

@@ -4,11 +4,14 @@
  */
 package hr.algebra.dao.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author miki
  */
 public final class Author {
+    
     private int id;
     private String name;
     private String link;
@@ -49,4 +52,29 @@ public final class Author {
     public void setLink(String link) {
         this.link = link;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + this.id;
+        hash = 73 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Author other = (Author) obj;
+        return this.id == other.id;
+    }
+    
+    
 }
