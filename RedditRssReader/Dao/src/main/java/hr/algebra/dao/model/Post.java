@@ -4,7 +4,7 @@
  */
 package hr.algebra.dao.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 public final class Post {
     
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     
     private int id;
     private String redditId;
@@ -23,13 +23,13 @@ public final class Post {
     private String link;
     private String thumbnailLink;
     private String content;
-    private LocalDateTime publishedDate;
-    private LocalDateTime updatedDate;
+    private OffsetDateTime publishedDate;
+    private OffsetDateTime updatedDate;
     private String subredditName;
 
     public Post() { }
 
-    public Post(int id, String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Post(int id, String redditId, String title, Author author, String link, String thumbnailLink, String content, OffsetDateTime publishedDate, OffsetDateTime updatedDate, String subredditName) {
         this.id = id;
         this.redditId = redditId;
         this.title = title;
@@ -42,7 +42,7 @@ public final class Post {
         this.subredditName = subredditName;
     }
 
-    public Post(String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Post(String redditId, String title, Author author, String link, String thumbnailLink, String content, OffsetDateTime publishedDate, OffsetDateTime updatedDate, String subredditName) {
         this.redditId = redditId;
         this.title = title;
         this.author = author;
@@ -110,19 +110,19 @@ public final class Post {
         this.content = content;
     }
 
-    public LocalDateTime getPublishedDate() {
+    public OffsetDateTime getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(LocalDateTime publishedDate) {
+    public void setPublishedDate(OffsetDateTime publishedDate) {
         this.publishedDate = publishedDate;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public OffsetDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(OffsetDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -132,6 +132,11 @@ public final class Post {
 
     public void setSubredditName(String subredditName) {
         this.subredditName = subredditName;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" + "id=" + id + ", redditId=" + redditId + ", title=" + title + ", author=" + author + ", link=" + link + ", thumbnailLink=" + thumbnailLink + ", content=" + content + ", publishedDate=" + publishedDate + ", updatedDate=" + updatedDate + ", subredditName=" + subredditName + '}';
     }
 
     @Override
@@ -156,6 +161,4 @@ public final class Post {
         final Post other = (Post) obj;
         return this.id == other.id;
     }
-    
-    
 }

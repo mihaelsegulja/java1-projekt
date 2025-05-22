@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hr.algebra.rrrapp.parser.rss;
+package hr.algebra.rrrapp.parser.model;
 
 import hr.algebra.dao.model.Author;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 public class Entry {
     
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     
     private int id;
     private String redditId;
@@ -24,14 +24,13 @@ public class Entry {
     private String link;
     private String thumbnailLink;
     private String content;
-    private LocalDateTime publishedDate;
-    private LocalDateTime updatedDate;
+    private OffsetDateTime publishedDate;
+    private OffsetDateTime updatedDate;
     private String subredditName;
 
-    public Entry() {
-    }
+    public Entry() { }
 
-    public Entry(int id, String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Entry(int id, String redditId, String title, Author author, String link, String thumbnailLink, String content, OffsetDateTime publishedDate, OffsetDateTime updatedDate, String subredditName) {
         this.id = id;
         this.redditId = redditId;
         this.title = title;
@@ -44,7 +43,7 @@ public class Entry {
         this.subredditName = subredditName;
     }
 
-    public Entry(String redditId, String title, Author author, String link, String thumbnailLink, String content, LocalDateTime publishedDate, LocalDateTime updatedDate, String subredditName) {
+    public Entry(String redditId, String title, Author author, String link, String thumbnailLink, String content, OffsetDateTime publishedDate, OffsetDateTime updatedDate, String subredditName) {
         this.redditId = redditId;
         this.title = title;
         this.author = author;
@@ -112,19 +111,19 @@ public class Entry {
         this.content = content;
     }
 
-    public LocalDateTime getPublishedDate() {
+    public OffsetDateTime getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(LocalDateTime publishedDate) {
+    public void setPublishedDate(OffsetDateTime publishedDate) {
         this.publishedDate = publishedDate;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public OffsetDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(OffsetDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -136,6 +135,11 @@ public class Entry {
         this.subredditName = subredditName;
     }
 
+    @Override
+    public String toString() {
+        return "Entry{" + "id=" + id + ", redditId=" + redditId + ", title=" + title + ", author=" + author + ", link=" + link + ", thumbnailLink=" + thumbnailLink + ", content=" + content + ", publishedDate=" + publishedDate + ", updatedDate=" + updatedDate + ", subredditName=" + subredditName + '}';
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;

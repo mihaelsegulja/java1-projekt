@@ -4,7 +4,7 @@
  */
 package hr.algebra.dao.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 public final class Comment {
     
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     
     private int id;
     private String redditId;
@@ -22,12 +22,12 @@ public final class Comment {
     private Author author;
     private String link;
     private String content;
-    private LocalDateTime updatedDate;
+    private OffsetDateTime updatedDate;
     private String subredditName;
 
     public Comment() { }
 
-    public Comment(int id, String redditId, String title, Author author, String link, String content, LocalDateTime updatedDate, String subredditName) {
+    public Comment(int id, String redditId, String title, Author author, String link, String content, OffsetDateTime updatedDate, String subredditName) {
         this.id = id;
         this.redditId = redditId;
         this.title = title;
@@ -38,7 +38,7 @@ public final class Comment {
         this.subredditName = subredditName;
     }
     
-    public Comment(String redditId, String title, Author author, String link, String content, LocalDateTime updatedDate, String subredditName) {
+    public Comment(String redditId, String title, Author author, String link, String content, OffsetDateTime updatedDate, String subredditName) {
         this.redditId = redditId;
         this.title = title;
         this.author = author;
@@ -96,11 +96,11 @@ public final class Comment {
         this.content = content;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public OffsetDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(OffsetDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -110,6 +110,11 @@ public final class Comment {
 
     public void setSubredditName(String subredditName) {
         this.subredditName = subredditName;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" + "id=" + id + ", redditId=" + redditId + ", title=" + title + ", author=" + author + ", link=" + link + ", content=" + content + ", updatedDate=" + updatedDate + ", subredditName=" + subredditName + '}';
     }
 
     @Override
@@ -134,6 +139,4 @@ public final class Comment {
         final Comment other = (Comment) obj;
         return this.id == other.id;
     }
-    
-    
 }

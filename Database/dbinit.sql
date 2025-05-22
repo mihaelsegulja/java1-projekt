@@ -11,12 +11,14 @@ CREATE TABLE [User] (
   [PasswordSalt] nvarchar(255) NOT NULL,
   [UserRoleId] int NOT NULL
 )
+GO
 
 CREATE TABLE [Author] (
   [Id] int IDENTITY(1,1) PRIMARY KEY,
   [Name] nvarchar(255) NULL,
   [Link] nvarchar(300) NULL
 )
+GO
 
 CREATE TABLE [Post] (
   [Id] int IDENTITY(1,1) PRIMARY KEY,
@@ -30,6 +32,7 @@ CREATE TABLE [Post] (
   [UpdatedDate] nvarchar(30) NULL,
   [SubredditName] nvarchar(255) NULL
 )
+GO
 
 CREATE TABLE [Comment] (
   [Id] int IDENTITY(1,1) PRIMARY KEY,
@@ -41,6 +44,7 @@ CREATE TABLE [Comment] (
   [UpdatedDate] nvarchar(30) NULL,
   [SubredditName] nvarchar(255) NULL
 )
+GO
 
 -- User CRUD
 
@@ -405,9 +409,9 @@ GO
 CREATE PROC spDeleteAll
 AS
 BEGIN
-  DELETE FROM [Author]
   DELETE FROM [Comment]
   DELETE FROM [Post]
+  DELETE FROM [Author]
 
   DBCC CHECKIDENT ('[Author]', RESEED, 0)
   DBCC CHECKIDENT ('[Comment]', RESEED, 0)

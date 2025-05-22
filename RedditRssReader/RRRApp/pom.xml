@@ -19,9 +19,24 @@
             <artifactId>Utilities</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-intellij-themes</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
+        </dependency>
     </dependencies>
     <properties>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>20</maven.compiler.release>
         <exec.mainClass>hr.algebra.rrrapp.MainForm</exec.mainClass>
     </properties>
 </project>

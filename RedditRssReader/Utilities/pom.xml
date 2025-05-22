@@ -8,8 +8,28 @@
     </parent>
     <artifactId>Utilities</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <properties>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>20</maven.compiler.release>
         <exec.mainClass>hr.algebra.utilities.Utilities</exec.mainClass>
     </properties>
 </project>

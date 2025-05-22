@@ -13,7 +13,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -351,8 +351,8 @@ public class SqlRepository implements Repository {
                             rs.getString(POST_LINK),
                             rs.getString(POST_THUMBNAIL_LINK),
                             rs.getString(POST_CONTENT),
-                            LocalDateTime.parse(rs.getString(POST_PUBLISHED_DATE), Post.DATE_FORMATTER),
-                            LocalDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
+                            OffsetDateTime.parse(rs.getString(POST_PUBLISHED_DATE), Post.DATE_FORMATTER),
+                            OffsetDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
                             rs.getString(POST_SUBREDDIT_NAME)
                     ));
                 }
@@ -380,8 +380,8 @@ public class SqlRepository implements Repository {
                         rs.getString(POST_LINK),
                         rs.getString(POST_THUMBNAIL_LINK),
                         rs.getString(POST_CONTENT),
-                        LocalDateTime.parse(rs.getString(POST_PUBLISHED_DATE), Post.DATE_FORMATTER),
-                        LocalDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
+                        OffsetDateTime.parse(rs.getString(POST_PUBLISHED_DATE), Post.DATE_FORMATTER),
+                        OffsetDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
                         rs.getString(POST_SUBREDDIT_NAME)
                 ));
             }
@@ -422,9 +422,9 @@ public class SqlRepository implements Repository {
                 stmt.setString(COMMENT_UPDATED_DATE, comment.getUpdatedDate().format(Comment.DATE_FORMATTER));
                 stmt.setString(COMMENT_SUBREDDIT_NAME, comment.getSubredditName());
                 stmt.registerOutParameter(ID_COMMENT, Types.INTEGER);
-            }
             
-            stmt.executeUpdate();
+                stmt.executeUpdate();
+            }
         }
     }
 
@@ -474,7 +474,7 @@ public class SqlRepository implements Repository {
                         ),
                         rs.getString(POST_LINK),
                         rs.getString(POST_CONTENT),
-                        LocalDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
+                        OffsetDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
                         rs.getString(POST_SUBREDDIT_NAME)
                     ));
                 }
@@ -501,7 +501,7 @@ public class SqlRepository implements Repository {
                         ),
                         rs.getString(COMMENT_LINK),
                         rs.getString(COMMENT_CONTENT),
-                        LocalDateTime.parse(rs.getString(COMMENT_UPDATED_DATE), Comment.DATE_FORMATTER),
+                        OffsetDateTime.parse(rs.getString(COMMENT_UPDATED_DATE), Comment.DATE_FORMATTER),
                         rs.getString(COMMENT_SUBREDDIT_NAME)
                 ));
             }
@@ -530,8 +530,8 @@ public class SqlRepository implements Repository {
                     rs.getString(POST_LINK),
                     rs.getString(POST_THUMBNAIL_LINK),
                     rs.getString(POST_CONTENT),
-                    LocalDateTime.parse(rs.getString(POST_PUBLISHED_DATE), Post.DATE_FORMATTER),
-                    LocalDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
+                    OffsetDateTime.parse(rs.getString(POST_PUBLISHED_DATE), Post.DATE_FORMATTER),
+                    OffsetDateTime.parse(rs.getString(POST_UPDATED_DATE), Post.DATE_FORMATTER),
                     rs.getString(POST_SUBREDDIT_NAME)
                 ));
             }
@@ -559,7 +559,7 @@ public class SqlRepository implements Repository {
                     ),
                     rs.getString(COMMENT_LINK),
                     rs.getString(COMMENT_CONTENT),
-                    LocalDateTime.parse(rs.getString(COMMENT_UPDATED_DATE), Comment.DATE_FORMATTER),
+                    OffsetDateTime.parse(rs.getString(COMMENT_UPDATED_DATE), Comment.DATE_FORMATTER),
                     rs.getString(COMMENT_SUBREDDIT_NAME)
                 ));
             }

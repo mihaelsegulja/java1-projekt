@@ -54,6 +54,11 @@ public final class Author {
     }
 
     @Override
+    public String toString() {
+        return "Author{" + "id=" + id + ", name=" + name + ", link=" + link + '}';
+    }
+
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 73 * hash + this.id;
@@ -75,6 +80,4 @@ public final class Author {
         final Author other = (Author) obj;
         return this.id == other.id;
     }
-    
-    
 }
