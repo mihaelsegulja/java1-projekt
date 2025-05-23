@@ -4,6 +4,9 @@
  */
 package hr.algebra.rrrapp;
 
+import hr.algebra.dao.model.User;
+import hr.algebra.dao.model.UserRole;
+import hr.algebra.rrrapp.view.Authentication;
 import hr.algebra.rrrapp.view.Settings;
 import hr.algebra.rrrapp.view.UploadContent;
 
@@ -18,7 +21,7 @@ public class MainForm extends javax.swing.JFrame {
      */
     public MainForm() {
         initComponents();
-        configurePanels();
+        initTabs();
     }
 
     /**
@@ -69,8 +72,28 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tpMain;
     // End of variables declaration//GEN-END:variables
 
-    private void configurePanels() {
-        tpMain.add("Upload", new UploadContent());
-        tpMain.add("Settings", new Settings());
+    private Authentication authPanel;
+    private UploadContent uploadPanel;
+    private Settings settingsPanel;
+    
+    private void initTabs() {
+        authPanel = new Authentication();
+        uploadPanel = new UploadContent();
+        settingsPanel = new Settings();
+
+        authPanel.setOnLoginSuccess(user -> {
+            showTabsForUser(user);
+            tpMain.remove(authPanel);
+        });
+
+        tpMain.add("Authenticate", authPanel);
+    }
+
+    private void showTabsForUser(User user) {
+        tpMain.add("Upload", uploadPanel);
+        tpMain.add("Settings", settingsPanel);
+
+        if (user.getUserRoleId() == UserRole.ADMIN.getUserRole()) {
+        }
     }
 }

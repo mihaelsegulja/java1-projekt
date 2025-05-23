@@ -22,7 +22,7 @@ public interface Repository {
     void updateUser(int id, User user) throws Exception;
     void deleteUser(int id) throws Exception;
     Optional<User> selectUser(int id) throws Exception;
-    List<User> selectUsers() throws Exception; // might not need it
+    List<User> selectUsers() throws Exception;
     
     // Author CRUD
     int createAuthor(Author author) throws Exception;

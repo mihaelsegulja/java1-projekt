@@ -50,8 +50,8 @@ GO
 
 CREATE PROC spCreateUser
   @Username nvarchar(50),
-  @PwdHash nvarchar(255),
-  @PwdSalt nvarchar(255),
+  @PasswordHash nvarchar(255),
+  @PasswordSalt nvarchar(255),
   @UserRoleId int,
   @Id int OUTPUT
 AS
@@ -64,8 +64,8 @@ BEGIN
   )
   VALUES (
     @Username, 
-    @PwdHash, 
-    @PwdSalt, 
+    @PasswordHash, 
+    @PasswordSalt, 
     @UserRoleId
   )
   SET @Id = SCOPE_IDENTITY()
@@ -74,16 +74,16 @@ GO
 
 CREATE PROC spUpdateUser
   @Username nvarchar(50),
-  @PwdHash nvarchar(255),
-  @PwdSalt nvarchar(255),
+  @PasswordHash nvarchar(255),
+  @PasswordSalt nvarchar(255),
   @UserRoleId int,
   @Id int
 AS
 BEGIN
   UPDATE [User] SET
     Username = @Username,
-    PasswordHash = @PwdHash,
-    PasswordSalt = @PwdSalt,
+    PasswordHash = @PasswordHash,
+    PasswordSalt = @PasswordSalt,
     UserRoleId = @UserRoleId
   WHERE Id = @Id
 END

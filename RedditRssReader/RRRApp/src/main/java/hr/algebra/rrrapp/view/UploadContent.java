@@ -44,6 +44,7 @@ public class UploadContent extends javax.swing.JPanel {
         lsContent = new javax.swing.JList<>();
         btnUploadContent = new javax.swing.JButton();
         lbRedditRssUrl = new javax.swing.JLabel();
+        lbRedditRssUrlError = new javax.swing.JLabel();
         tfRedditRssUrl = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(800, 600));
@@ -64,6 +65,10 @@ public class UploadContent extends javax.swing.JPanel {
 
         lbRedditRssUrl.setText("Reddit RSS URL or subreddit name:");
 
+        lbRedditRssUrlError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbRedditRssUrlError.setForeground(new java.awt.Color(255, 0, 0));
+        lbRedditRssUrlError.setText("X");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -72,26 +77,32 @@ public class UploadContent extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnUploadContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)))
+                        .addComponent(btnUploadContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(lbRedditRssUrl)
                         .addGap(18, 18, 18)
-                        .addComponent(tfRedditRssUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)))
+                        .addComponent(tfRedditRssUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbRedditRssUrlError, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbRedditRssUrl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tfRedditRssUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tfRedditRssUrl, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbRedditRssUrlError, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(12, 12, 12)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnUploadContent, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -146,11 +157,11 @@ public class UploadContent extends javax.swing.JPanel {
         init();
     }//GEN-LAST:event_formComponentShown
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUploadContent;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbRedditRssUrl;
+    private javax.swing.JLabel lbRedditRssUrlError;
     private javax.swing.JList<String> lsContent;
     private javax.swing.JTextField tfRedditRssUrl;
     // End of variables declaration//GEN-END:variables

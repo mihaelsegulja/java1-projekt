@@ -22,7 +22,6 @@ public class Settings extends javax.swing.JPanel {
      */
     public Settings() {
         initComponents();
-        repo = RepositoryFactory.getRepository();
     }
 
     /**
@@ -35,6 +34,12 @@ public class Settings extends javax.swing.JPanel {
     private void initComponents() {
 
         btnDeleteAllData = new javax.swing.JButton();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         btnDeleteAllData.setBackground(new java.awt.Color(255, 0, 0));
         btnDeleteAllData.setForeground(new java.awt.Color(255, 255, 255));
@@ -50,16 +55,16 @@ public class Settings extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(313, 313, 313)
-                .addComponent(btnDeleteAllData, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(329, Short.MAX_VALUE))
+                .addGap(320, 320, 320)
+                .addComponent(btnDeleteAllData, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(332, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(204, 204, 204)
-                .addComponent(btnDeleteAllData, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(357, Short.MAX_VALUE))
+                .addGap(180, 180, 180)
+                .addComponent(btnDeleteAllData, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(340, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -73,6 +78,10 @@ public class Settings extends javax.swing.JPanel {
             MessageUtils.showErrorMessage("Error", "Failed to delete data");
         }
     }//GEN-LAST:event_btnDeleteAllDataActionPerformed
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        init();
+    }//GEN-LAST:event_formComponentShown
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -94,6 +103,14 @@ public class Settings extends javax.swing.JPanel {
                     }
                 }
             }
+        }
+    }
+
+    private void init() {
+        try {
+            repo = RepositoryFactory.getRepository();
+        } catch (Exception e) {
+            MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
         }
     }
 }
