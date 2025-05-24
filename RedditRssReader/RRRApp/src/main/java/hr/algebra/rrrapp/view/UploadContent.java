@@ -4,7 +4,8 @@
  */
 package hr.algebra.rrrapp.view;
 
-import hr.algebra.dao.Repository;
+import hr.algebra.dao.CommentRepository;
+import hr.algebra.dao.PostRepository;
 import hr.algebra.dao.RepositoryFactory;
 import hr.algebra.dao.model.Comment;
 import hr.algebra.dao.model.Post;
@@ -120,7 +121,7 @@ public class UploadContent extends javax.swing.JPanel {
             switch (type) {
                 case SUBREDDIT -> {
                     List<Post> posts = EntryMapper.mapToPosts(entries);
-                    repo.createPosts(posts);
+                    postRepo.createPosts(posts);
                     display(new ArrayList<>(posts));
                 }
                 case POST -> {
@@ -137,10 +138,10 @@ public class UploadContent extends javax.swing.JPanel {
 //                            firstEntry.getUpdatedDate(),
 //                            firstEntry.getSubredditName()
 //                    );
-//                    repo.createPost(post);
+//                    postRepo.createPost(post);
                     entries.remove(0);
                     List<Comment> comments = EntryMapper.mapToComments(entries);
-                    repo.createComments(comments);
+                    commentRepo.createComments(comments);
                     display(new ArrayList<>(comments));
                 }
                 default -> {
@@ -166,12 +167,14 @@ public class UploadContent extends javax.swing.JPanel {
     private javax.swing.JTextField tfRedditRssUrl;
     // End of variables declaration//GEN-END:variables
 
-    private Repository repo;
+    private PostRepository postRepo;
+    private CommentRepository commentRepo;
     private DefaultListModel<String> model;
     
     private void init() {
         try {
-            repo = RepositoryFactory.getRepository();
+            postRepo = RepositoryFactory.getPostRepo();
+            commentRepo = RepositoryFactory.getCommentRepo();
             model = new DefaultListModel<>();
         } catch (Exception e) {
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");

@@ -4,7 +4,7 @@
  */
 package hr.algebra.rrrapp.view;
 
-import hr.algebra.dao.Repository;
+import hr.algebra.dao.AdministrationRepository;
 import hr.algebra.dao.RepositoryFactory;
 import hr.algebra.utilities.MessageUtils;
 import java.io.File;
@@ -70,7 +70,7 @@ public class Settings extends javax.swing.JPanel {
 
     private void btnDeleteAllDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllDataActionPerformed
         try {
-            repo.deleteAll();
+            adminRepo.deleteAll();
             deleteLocalImages();
             MessageUtils.showInformationMessage("Success", "All data deleted");
         } catch (Exception ex) {
@@ -88,7 +88,7 @@ public class Settings extends javax.swing.JPanel {
     private javax.swing.JButton btnDeleteAllData;
     // End of variables declaration//GEN-END:variables
 
-    private Repository repo;
+    private AdministrationRepository adminRepo;
 
     private void deleteLocalImages() {
         File assetsDir = new File("assets");
@@ -108,7 +108,7 @@ public class Settings extends javax.swing.JPanel {
 
     private void init() {
         try {
-            repo = RepositoryFactory.getRepository();
+            adminRepo = RepositoryFactory.getAdminRepo();
         } catch (Exception e) {
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
         }

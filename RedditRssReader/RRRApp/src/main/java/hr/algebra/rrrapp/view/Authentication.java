@@ -4,8 +4,8 @@
  */
 package hr.algebra.rrrapp.view;
 
-import hr.algebra.dao.Repository;
 import hr.algebra.dao.RepositoryFactory;
+import hr.algebra.dao.UserRepository;
 import hr.algebra.dao.model.User;
 import hr.algebra.dao.model.UserRole;
 import hr.algebra.utilities.MessageUtils;
@@ -125,7 +125,7 @@ public class Authentication extends javax.swing.JPanel {
         String pass = new String(pfAuthPassword.getPassword());
         
         try {
-            Optional<User> existingUser = repo.selectUsers().stream()
+            Optional<User> existingUser = userRepo.selectUsers().stream()
                     .filter(user -> username.equals(user.getUsername()))
                     .findFirst();
             
@@ -162,7 +162,7 @@ public class Authentication extends javax.swing.JPanel {
                 UserRole.USER.getUserRole()
             );
             
-            repo.createUser(user);
+            userRepo.createUser(user);
             MessageUtils.showInformationMessage("Success", "Successfully registered");
         } catch (Exception e) {
             MessageUtils.showErrorMessage("Error", "Failed to register");
@@ -185,7 +185,7 @@ public class Authentication extends javax.swing.JPanel {
     private javax.swing.JTextField tfAuthUsername;
     // End of variables declaration//GEN-END:variables
 
-    private Repository repo;
+    private UserRepository userRepo;
     private Consumer<User> onLoginSuccess;
     
     public void setOnLoginSuccess(Consumer<User> callback) {
@@ -194,7 +194,7 @@ public class Authentication extends javax.swing.JPanel {
 
     private void init() {
         try {
-            repo = RepositoryFactory.getRepository();
+            userRepo = RepositoryFactory.getUserRepo();
         } catch (Exception e) {
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
         }
