@@ -7,8 +7,12 @@ package hr.algebra.rrrapp;
 import hr.algebra.dao.model.User;
 import hr.algebra.dao.model.UserRole;
 import hr.algebra.rrrapp.view.Authentication;
+import hr.algebra.rrrapp.view.EditAuthor;
+import hr.algebra.rrrapp.view.EditComment;
+import hr.algebra.rrrapp.view.EditPost;
 import hr.algebra.rrrapp.view.Settings;
 import hr.algebra.rrrapp.view.UploadContent;
+import java.awt.Component;
 
 /**
  *
@@ -41,7 +45,7 @@ public class MainForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpMain, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(tpMain, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -58,7 +62,7 @@ public class MainForm extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Theme */
-        com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme.setup();
+        com.formdev.flatlaf.intellijthemes.FlatSolarizedLightIJTheme.setup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -75,11 +79,17 @@ public class MainForm extends javax.swing.JFrame {
     private Authentication authPanel;
     private UploadContent uploadPanel;
     private Settings settingsPanel;
+    private EditPost editPost;
+    private EditAuthor editAuthor;
+    private EditComment editComment;
     
     private void initTabs() {
         authPanel = new Authentication();
         uploadPanel = new UploadContent();
         settingsPanel = new Settings();
+        editPost = new EditPost();
+        editAuthor = new EditAuthor();
+        editComment = new EditComment();
 
         authPanel.setOnLoginSuccess(user -> {
             showTabsForUser(user);
@@ -91,6 +101,9 @@ public class MainForm extends javax.swing.JFrame {
 
     private void showTabsForUser(User user) {
         tpMain.add("Upload", uploadPanel);
+        tpMain.add("Edit Posts", editPost);
+        tpMain.add("Edit Authors", editAuthor);
+        tpMain.add("Edit Comments", editComment);
         tpMain.add("Settings", settingsPanel);
 
         if (user.getUserRoleId() == UserRole.ADMIN.getUserRole()) {

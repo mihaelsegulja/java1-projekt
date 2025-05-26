@@ -88,9 +88,10 @@ public class PostSqlRepository implements PostRepository {
     }
 
     @Override
-    public void updatePosts(int id, Post post) throws Exception {
+    public void updatePost(int id, Post post) throws Exception {
         DataSource ds = DataSourceSingleton.getInstance();
         try (Connection con = ds.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_POST)){
+            stmt.setInt(ID_POST, id);
             stmt.setString(POST_REDDIT_ID, post.getRedditId());
             stmt.setString(POST_TITLE, post.getTitle());
             stmt.setInt(POST_AUTHOR_ID, post.getAuthor().getId());
@@ -100,7 +101,6 @@ public class PostSqlRepository implements PostRepository {
             stmt.setString(POST_PUBLISHED_DATE, post.getPublishedDate().format(Post.DATE_FORMATTER));
             stmt.setString(POST_UPDATED_DATE, post.getUpdatedDate().format(Post.DATE_FORMATTER));
             stmt.setString(POST_SUBREDDIT_NAME, post.getSubredditName());
-            stmt.registerOutParameter(ID_POST, id);
             
             stmt.executeUpdate();
         }

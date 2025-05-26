@@ -87,6 +87,7 @@ public class CommentSqlRepository implements CommentRepository {
     public void updateComment(int id, Comment comment) throws Exception {
         DataSource ds = DataSourceSingleton.getInstance();
         try (Connection con = ds.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_COMMENT)){
+            stmt.setInt(ID_COMMENT, id);
             stmt.setString(COMMENT_REDDIT_ID, comment.getRedditId());
             stmt.setString(COMMENT_TITLE, comment.getTitle());
             stmt.setInt(COMMENT_AUTHOR_ID, comment.getAuthor().getId());
@@ -94,7 +95,6 @@ public class CommentSqlRepository implements CommentRepository {
             stmt.setString(COMMENT_CONTENT, comment.getContent());
             stmt.setString(COMMENT_UPDATED_DATE, comment.getUpdatedDate().format(Comment.DATE_FORMATTER));
             stmt.setString(COMMENT_SUBREDDIT_NAME, comment.getSubredditName());
-            stmt.registerOutParameter(ID_COMMENT, id);
             
             stmt.executeUpdate();
         }

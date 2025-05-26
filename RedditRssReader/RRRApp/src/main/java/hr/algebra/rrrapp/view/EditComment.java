@@ -4,12 +4,35 @@
  */
 package hr.algebra.rrrapp.view;
 
+import hr.algebra.dao.AuthorRepository;
+import hr.algebra.dao.CommentRepository;
+import hr.algebra.dao.RepositoryFactory;
+import hr.algebra.dao.model.Author;
+import hr.algebra.dao.model.Comment;
+import hr.algebra.rrrapp.view.model.CommentTableModel;
+import hr.algebra.utilities.MessageUtils;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.ListSelectionModel;
+import javax.swing.text.JTextComponent;
+
 /**
  *
  * @author miki
  */
 public class EditComment extends javax.swing.JPanel {
 
+    private Map<JTextComponent, JLabel> validationMap;
+    private CommentTableModel commentTableModel;
+    private CommentRepository commentRepo;
+    private AuthorRepository authorRepo;
+    private Comment selectedComment;
+    
     /**
      * Creates new form EditComment
      */
@@ -26,19 +49,502 @@ public class EditComment extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbCommentTitle = new javax.swing.JLabel();
+        tfCommentTitle = new javax.swing.JTextField();
+        lbCommentTitleError = new javax.swing.JLabel();
+        lbCommentLink = new javax.swing.JLabel();
+        tfCommentLink = new javax.swing.JTextField();
+        lbCommentLinkError = new javax.swing.JLabel();
+        lbCommentRedditId = new javax.swing.JLabel();
+        tfCommentRedditId = new javax.swing.JTextField();
+        lbCommentAuthorName = new javax.swing.JLabel();
+        tfCommentAuthorName = new javax.swing.JTextField();
+        lbPostContent = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taCommentContent = new javax.swing.JTextArea();
+        lbCommentAuthorNameError = new javax.swing.JLabel();
+        lbCommentRedditIdError = new javax.swing.JLabel();
+        lbCommentSubredditName = new javax.swing.JLabel();
+        tfCommentSubredditName = new javax.swing.JTextField();
+        lbCommentAuthorLink = new javax.swing.JLabel();
+        tfCommentAuthorLink = new javax.swing.JTextField();
+        lbCommentUpdateDate = new javax.swing.JLabel();
+        tfCommentUpdateDate = new javax.swing.JTextField();
+        lbCommentUpdateDateError = new javax.swing.JLabel();
+        lbCommentAuthorLinkError = new javax.swing.JLabel();
+        lbCommentSubredditNameError = new javax.swing.JLabel();
+        btnCommentDelete = new javax.swing.JButton();
+        btnCommentUpdate = new javax.swing.JButton();
+        btnCommentAdd = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbComments = new javax.swing.JTable();
+        lbCommentContentError = new javax.swing.JLabel();
+
+        setPreferredSize(new java.awt.Dimension(900, 600));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
+
+        lbCommentTitle.setText("Title");
+
+        lbCommentTitleError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentTitleError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentTitleError.setText("X");
+
+        lbCommentLink.setText("Link");
+
+        lbCommentLinkError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentLinkError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentLinkError.setText("X");
+
+        lbCommentRedditId.setText("Reddit ID");
+
+        lbCommentAuthorName.setText("Author Name");
+
+        lbPostContent.setText("Content");
+
+        taCommentContent.setColumns(20);
+        taCommentContent.setRows(5);
+        jScrollPane2.setViewportView(taCommentContent);
+
+        lbCommentAuthorNameError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentAuthorNameError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentAuthorNameError.setText("X");
+
+        lbCommentRedditIdError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentRedditIdError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentRedditIdError.setText("X");
+
+        lbCommentSubredditName.setText("Subreddit");
+
+        lbCommentAuthorLink.setText("Author Link");
+
+        lbCommentUpdateDate.setText("UpdatedDate");
+
+        lbCommentUpdateDateError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentUpdateDateError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentUpdateDateError.setText("X");
+
+        lbCommentAuthorLinkError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentAuthorLinkError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentAuthorLinkError.setText("X");
+
+        lbCommentSubredditNameError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentSubredditNameError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentSubredditNameError.setText("X");
+
+        btnCommentDelete.setText("Delete");
+        btnCommentDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCommentDeleteActionPerformed(evt);
+            }
+        });
+
+        btnCommentUpdate.setText("Update");
+        btnCommentUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCommentUpdateActionPerformed(evt);
+            }
+        });
+
+        btnCommentAdd.setText("Add");
+        btnCommentAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCommentAddActionPerformed(evt);
+            }
+        });
+
+        tbComments.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tbComments.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbCommentsMouseClicked(evt);
+            }
+        });
+        tbComments.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbCommentsKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbComments);
+
+        lbCommentContentError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCommentContentError.setForeground(new java.awt.Color(255, 0, 0));
+        lbCommentContentError.setText("X");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbPostContent)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(tfCommentUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbCommentUpdateDateError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbCommentUpdateDate))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(464, Short.MAX_VALUE)
+                .addComponent(lbCommentContentError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(420, 420, 420))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(23, 23, 23)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(tfCommentTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfCommentRedditId, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfCommentAuthorName, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbCommentAuthorName)
+                                .addComponent(lbCommentTitle)
+                                .addComponent(lbCommentRedditId))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbCommentTitleError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbCommentRedditIdError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbCommentAuthorNameError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tfCommentSubredditName, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentSubredditNameError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lbCommentSubredditName)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tfCommentAuthorLink, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentAuthorLinkError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lbCommentAuthorLink)
+                                .addComponent(lbCommentLink)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tfCommentLink, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentLinkError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(135, 135, 135))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnCommentAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(btnCommentUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(btnCommentDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(23, 23, 23))
+                .addComponent(jScrollPane1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(183, 183, 183)
+                .addComponent(lbCommentUpdateDate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfCommentUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbCommentUpdateDateError))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbPostContent)
+                .addGap(42, 42, 42)
+                .addComponent(lbCommentContentError)
+                .addContainerGap(285, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(0, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnCommentAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCommentUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCommentDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(33, 33, 33))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lbCommentTitle)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfCommentTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbCommentTitleError))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentRedditId)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfCommentRedditId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbCommentRedditIdError))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentAuthorName)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfCommentAuthorName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbCommentAuthorNameError)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lbCommentLink)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfCommentLink, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbCommentLinkError))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentSubredditName)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfCommentSubredditName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbCommentSubredditNameError))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbCommentAuthorLink)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfCommentAuthorLink, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbCommentAuthorLinkError))))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(8, 8, 8)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(1, 1, 1)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        init();
+    }//GEN-LAST:event_formComponentShown
+
+    private void btnCommentAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentAddActionPerformed
+        if (!formValid()) {
+            return;
+        }
+        try {
+            Comment comment = new Comment(
+                tfCommentRedditId.getText().trim(),
+                tfCommentTitle.getText().trim(),
+                new Author(
+                    tfCommentAuthorName.getText().trim(),
+                    tfCommentAuthorLink.getText().trim()
+                ),
+                tfCommentLink.getText().trim(),
+                taCommentContent.getText().trim(),
+                OffsetDateTime.parse(tfCommentUpdateDate.getText().trim(), Comment.DATE_FORMATTER),
+                tfCommentSubredditName.getText().trim()
+            );
+            commentRepo.createComment(comment);
+            commentTableModel.setComments(commentRepo.selectComments());
+            clearForm();
+        } catch (Exception ex) {
+            Logger.getLogger(EditComment.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to create comment");
+        }
+    }//GEN-LAST:event_btnCommentAddActionPerformed
+
+    private void btnCommentUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentUpdateActionPerformed
+        if (selectedComment == null) {
+            MessageUtils.showErrorMessage("Wronk operation", "Please choose comment first");
+            return;
+        }
+        if (!formValid()) {
+            return;
+        }
+        try {
+            selectedComment.setTitle(tfCommentTitle.getText().trim());
+            selectedComment.setLink(tfCommentLink.getText().trim());
+            selectedComment.setRedditId(tfCommentRedditId.getText().trim());
+            selectedComment.setSubredditName(tfCommentSubredditName.getText().trim());
+            selectedComment.setContent(taCommentContent.getText().trim());
+            selectedComment.setUpdatedDate(OffsetDateTime.parse(tfCommentUpdateDate.getText().trim(), Comment.DATE_FORMATTER));
+
+            Author author = new Author(tfCommentAuthorName.getText().trim(), tfCommentAuthorLink.getText().trim());
+            Optional<Author> existingAuthor = authorRepo.selectAuthors().stream()
+                    .filter(a -> author.getName().equals(a.getName()))
+                    .findFirst();
+            if (existingAuthor.isPresent()) {
+                author.setId(existingAuthor.get().getId());
+            } else {
+                int newAuthorId = authorRepo.createAuthor(author);
+                author.setId(newAuthorId);
+            }
+            selectedComment.setAuthor(author);
+            
+            commentRepo.updateComment(selectedComment.getId(), selectedComment);
+            commentTableModel.setComments(commentRepo.selectComments());
+            clearForm();
+        } catch (Exception ex) {
+            Logger.getLogger(EditComment.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to update comment");
+        }
+    }//GEN-LAST:event_btnCommentUpdateActionPerformed
+
+    private void btnCommentDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentDeleteActionPerformed
+        if (selectedComment == null) {
+            MessageUtils.showErrorMessage("Wronk operation", "Please choose comment first");
+            return;
+        }
+        if (MessageUtils.showConfirmDialog("Delete comment", "Fr fr?")) {
+            try {
+                commentRepo.deleteComment(selectedComment.getId());
+                commentTableModel.setComments(commentRepo.selectComments());
+                clearForm();
+            } catch (Exception ex) {
+                Logger.getLogger(EditComment.class.getName()).log(Level.SEVERE, null, ex);
+                MessageUtils.showErrorMessage("Error", "Unable to delete comment");
+            }
+        }
+    }//GEN-LAST:event_btnCommentDeleteActionPerformed
+
+    private void tbCommentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbCommentsMouseClicked
+        showComment();
+    }//GEN-LAST:event_tbCommentsMouseClicked
+
+    private void tbCommentsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbCommentsKeyReleased
+        showComment();
+    }//GEN-LAST:event_tbCommentsKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCommentAdd;
+    private javax.swing.JButton btnCommentDelete;
+    private javax.swing.JButton btnCommentUpdate;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbCommentAuthorLink;
+    private javax.swing.JLabel lbCommentAuthorLinkError;
+    private javax.swing.JLabel lbCommentAuthorName;
+    private javax.swing.JLabel lbCommentAuthorNameError;
+    private javax.swing.JLabel lbCommentContentError;
+    private javax.swing.JLabel lbCommentLink;
+    private javax.swing.JLabel lbCommentLinkError;
+    private javax.swing.JLabel lbCommentRedditId;
+    private javax.swing.JLabel lbCommentRedditIdError;
+    private javax.swing.JLabel lbCommentSubredditName;
+    private javax.swing.JLabel lbCommentSubredditNameError;
+    private javax.swing.JLabel lbCommentTitle;
+    private javax.swing.JLabel lbCommentTitleError;
+    private javax.swing.JLabel lbCommentUpdateDate;
+    private javax.swing.JLabel lbCommentUpdateDateError;
+    private javax.swing.JLabel lbPostContent;
+    private javax.swing.JTextArea taCommentContent;
+    private javax.swing.JTable tbComments;
+    private javax.swing.JTextField tfCommentAuthorLink;
+    private javax.swing.JTextField tfCommentAuthorName;
+    private javax.swing.JTextField tfCommentLink;
+    private javax.swing.JTextField tfCommentRedditId;
+    private javax.swing.JTextField tfCommentSubredditName;
+    private javax.swing.JTextField tfCommentTitle;
+    private javax.swing.JTextField tfCommentUpdateDate;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        try {
+            initValidation();
+            clearForm();
+            hideErrors();
+            initRepo();
+            initTable();
+        } catch (Exception ex) {
+            Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
+        }
+    }
+    
+    private void initValidation() {
+        validationMap = new HashMap<>();
+        
+        validationMap.put(tfCommentTitle, lbCommentTitleError);
+        validationMap.put(tfCommentLink, lbCommentLinkError);
+        validationMap.put(tfCommentAuthorName, lbCommentAuthorNameError);
+        validationMap.put(tfCommentAuthorLink, lbCommentAuthorLinkError);
+        validationMap.put(tfCommentRedditId, lbCommentRedditIdError);
+        validationMap.put(tfCommentSubredditName, lbCommentSubredditNameError);
+        validationMap.put(tfCommentUpdateDate, lbCommentUpdateDateError);
+        validationMap.put(taCommentContent, lbCommentContentError);
+    }
+    
+    private void hideErrors() {
+        validationMap.forEach((key, val) -> val.setVisible(false));
+    }
+
+    private void initRepo() throws Exception {
+        commentRepo = RepositoryFactory.getCommentRepo();
+        authorRepo = RepositoryFactory.getAuthorRepo();
+    }
+
+    private void initTable() throws Exception {
+        tbComments.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbComments.setAutoCreateRowSorter(true);
+        tbComments.setRowHeight(25);
+        commentTableModel = new CommentTableModel(commentRepo.selectComments());
+        tbComments.setModel(commentTableModel);
+    }
+    
+    private boolean formValid() {
+        hideErrors();
+        boolean ok = true;
+
+        for (Map.Entry<JTextComponent, JLabel> entry : validationMap.entrySet()) {
+            JTextComponent key = entry.getKey();
+            JLabel val = entry.getValue();
+
+            boolean invalidInput = key.getText().trim().isEmpty();
+            val.setVisible(invalidInput);
+            if (invalidInput) {
+                ok = false;
+            }
+
+            if ("Date".equals(key.getName())) {
+                try {
+                    OffsetDateTime.parse(key.getText().trim(), Comment.DATE_FORMATTER);
+                } catch (Exception e) {
+                    ok = false;
+                    val.setVisible(true);
+                }
+            }
+        }
+
+        return ok;
+    }
+    
+    private void clearForm() {
+        hideErrors();
+        validationMap.forEach((key, val) -> key.setText(""));
+        selectedComment = null;
+    }
+    
+    private void showComment() {
+        clearForm();
+        int selectedRow = tbComments.getSelectedRow();
+        int rowIndex = tbComments.convertRowIndexToModel(selectedRow);
+        int selectedCommentId = (int) commentTableModel.getValueAt(rowIndex, 0);
+        
+        try {
+            Optional<Comment> optComment = commentRepo.selectComment(selectedCommentId);
+            if (optComment.isPresent()) {
+                selectedComment = optComment.get();
+                fillForm(selectedComment);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(EditComment.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to show comment");
+        }
+    }
+
+    private void fillForm(Comment comment) {
+        tfCommentTitle.setText(comment.getTitle());
+        tfCommentLink.setText(comment.getLink());
+        tfCommentAuthorName.setText(comment.getAuthor().getName());
+        tfCommentAuthorLink.setText(comment.getAuthor().getLink());
+        tfCommentRedditId.setText(comment.getRedditId());
+        tfCommentSubredditName.setText(comment.getSubredditName());
+        tfCommentUpdateDate.setText(comment.getUpdatedDate().format(Comment.DATE_FORMATTER));
+        taCommentContent.setText(comment.getContent());
+    }
 }

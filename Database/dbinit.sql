@@ -418,3 +418,9 @@ BEGIN
   DBCC CHECKIDENT ('[Post]', RESEED, 0)
 END
 GO
+
+-- seed
+
+declare @tempId int
+exec spCreateUser 'Admin', 'o7jETcZI1qQS2L51Yj8KfSJpoiqEHJVEG5rRfoWAMzs=', 'Dir0wLvK1M46ZEwM/CIdrA==', 100, @tempId
+GO

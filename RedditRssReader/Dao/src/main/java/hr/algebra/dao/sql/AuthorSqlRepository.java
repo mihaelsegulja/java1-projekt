@@ -62,9 +62,9 @@ public class AuthorSqlRepository implements AuthorRepository {
     public void updateAuthor(int id, Author author) throws Exception {
         DataSource ds = DataSourceSingleton.getInstance();
         try (Connection con = ds.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_AUTHOR)){
+            stmt.setInt(ID_AUTHOR, id);
             stmt.setString(AUTHOR_NAME, author.getName());
             stmt.setString(AUTHOR_LINK, author.getLink());
-            stmt.registerOutParameter(ID_AUTHOR, id);
             
             stmt.executeUpdate();
         }

@@ -10,15 +10,25 @@ import hr.algebra.dao.model.User;
 import hr.algebra.dao.model.UserRole;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.utilities.PasswordUtils;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.text.JTextComponent;
 
 /**
  *
- * @author MihaelŠegulja
+ * @author miki
  */
 public class Authentication extends javax.swing.JPanel {
 
+    private UserRepository userRepo;
+    private Consumer<User> onLoginSuccess;
+    private Map<JTextComponent, JLabel> validationMap; 
+    
     /**
      * Creates new form Authentication
      */
@@ -80,8 +90,8 @@ public class Authentication extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(263, 263, 263)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(310, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbAuthPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbAuthUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -92,35 +102,39 @@ public class Authentication extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbAuthPasswordError, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbAuthUsernameError, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(226, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbAuthPasswordError, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
+                    .addComponent(lbAuthUsernameError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(310, 310, 310))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(147, Short.MAX_VALUE)
                 .addComponent(lbAuthUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfAuthUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbAuthUsernameError, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbAuthUsernameError))
                 .addGap(18, 18, 18)
                 .addComponent(lbAuthPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pfAuthPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbAuthPasswordError, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbAuthPasswordError))
                 .addGap(66, 66, 66)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addGap(135, 135, 135))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        if (!formValid()) {
+            return;
+        }
+        
         String username = tfAuthUsername.getText().trim();
         String pass = new String(pfAuthPassword.getPassword());
         
@@ -131,6 +145,7 @@ public class Authentication extends javax.swing.JPanel {
             
             if(!existingUser.isPresent()){
                 MessageUtils.showErrorMessage("Error", "User does not exist");
+                return;
             }
             
             User user = existingUser.get();
@@ -138,17 +153,22 @@ public class Authentication extends javax.swing.JPanel {
             
             if (!validPass){
                 MessageUtils.showErrorMessage("Error", "Invalid password");
+                return;
             }
             
             onLoginSuccess.accept(user);
             
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(Authentication.class.getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Error", "Failed to log in");
-            e.printStackTrace();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        if (!formValid()) {
+            return;
+        }
+        
         String username = tfAuthUsername.getText().trim();
         String pass = new String(pfAuthPassword.getPassword());
         
@@ -164,9 +184,9 @@ public class Authentication extends javax.swing.JPanel {
             
             userRepo.createUser(user);
             MessageUtils.showInformationMessage("Success", "Successfully registered");
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(Authentication.class.getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Error", "Failed to register");
-            e.printStackTrace();
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
@@ -185,18 +205,57 @@ public class Authentication extends javax.swing.JPanel {
     private javax.swing.JTextField tfAuthUsername;
     // End of variables declaration//GEN-END:variables
 
-    private UserRepository userRepo;
-    private Consumer<User> onLoginSuccess;
-    
     public void setOnLoginSuccess(Consumer<User> callback) {
         this.onLoginSuccess = callback;
     }
 
     private void init() {
         try {
-            userRepo = RepositoryFactory.getUserRepo();
-        } catch (Exception e) {
+            initValidation();
+            clearForm();
+            hideErrors();
+            initRepo();
+        } catch (Exception ex) {
+            Logger.getLogger(Authentication.class.getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
         }
+    }
+    
+    private void initValidation() {
+        validationMap = new HashMap<>();
+        
+        validationMap.put(tfAuthUsername, lbAuthUsernameError);
+        validationMap.put(pfAuthPassword, lbAuthPasswordError);
+    }
+
+    private void hideErrors() {
+        validationMap.forEach((key, val) -> val.setVisible(false));
+    }
+
+    private void clearForm() {
+        hideErrors();
+        validationMap.forEach((key, val) -> key.setText(""));
+    }
+
+    private void initRepo() throws Exception {
+        userRepo = RepositoryFactory.getUserRepo();
+    }
+    
+    private boolean formValid() {
+        hideErrors();
+        boolean ok = true;
+
+        for (Map.Entry<JTextComponent, JLabel> entry : validationMap.entrySet()) {
+            JTextComponent key = entry.getKey();
+            JLabel val = entry.getValue();
+
+            boolean invalidInput = key.getText().trim().isEmpty();
+            val.setVisible(invalidInput);
+            if (invalidInput) {
+                ok = false;
+            }
+        }
+
+        return ok;
     }
 }

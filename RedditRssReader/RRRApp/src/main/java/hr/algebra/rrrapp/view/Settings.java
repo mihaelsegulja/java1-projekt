@@ -17,6 +17,8 @@ import java.util.logging.Logger;
  */
 public class Settings extends javax.swing.JPanel {
 
+    private AdministrationRepository adminRepo;
+
     /**
      * Creates new form Settings
      */
@@ -54,17 +56,17 @@ public class Settings extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(320, 320, 320)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(380, Short.MAX_VALUE)
                 .addComponent(btnDeleteAllData, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(332, Short.MAX_VALUE))
+                .addGap(372, 372, 372))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(180, 180, 180)
+                .addGap(245, 245, 245)
                 .addComponent(btnDeleteAllData, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(340, Short.MAX_VALUE))
+                .addContainerGap(275, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -73,8 +75,8 @@ public class Settings extends javax.swing.JPanel {
             adminRepo.deleteAll();
             deleteLocalImages();
             MessageUtils.showInformationMessage("Success", "All data deleted");
-        } catch (Exception ex) {
-            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, e);
             MessageUtils.showErrorMessage("Error", "Failed to delete data");
         }
     }//GEN-LAST:event_btnDeleteAllDataActionPerformed
@@ -87,8 +89,6 @@ public class Settings extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeleteAllData;
     // End of variables declaration//GEN-END:variables
-
-    private AdministrationRepository adminRepo;
 
     private void deleteLocalImages() {
         File assetsDir = new File("assets");
@@ -109,7 +109,8 @@ public class Settings extends javax.swing.JPanel {
     private void init() {
         try {
             adminRepo = RepositoryFactory.getAdminRepo();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
         }
     }

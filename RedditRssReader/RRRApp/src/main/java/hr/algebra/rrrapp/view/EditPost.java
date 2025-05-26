@@ -4,12 +4,44 @@
  */
 package hr.algebra.rrrapp.view;
 
+import hr.algebra.dao.AuthorRepository;
+import hr.algebra.dao.PostRepository;
+import hr.algebra.dao.RepositoryFactory;
+import hr.algebra.dao.model.Author;
+import hr.algebra.dao.model.Post;
+import hr.algebra.rrrapp.view.model.PostTableModel;
+import hr.algebra.utilities.FileUtils;
+import hr.algebra.utilities.IconUtils;
+import hr.algebra.utilities.MessageUtils;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.ListSelectionModel;
+import javax.swing.text.JTextComponent;
+
 /**
  *
  * @author miki
  */
 public class EditPost extends javax.swing.JPanel {
 
+    private static final String DIR = "assets";
+    private Map<JTextComponent, JLabel> validationMap;
+    private PostTableModel postTableModel;
+    private PostRepository postRepo;
+    private AuthorRepository authorRepo;
+    private Post selectedPost;
+    
     /**
      * Creates new form EditPost
      */
@@ -26,19 +58,605 @@ public class EditPost extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbPosts = new javax.swing.JTable();
+        tfPostTitle = new javax.swing.JTextField();
+        btnPostDelete = new javax.swing.JButton();
+        btnPostUpdate = new javax.swing.JButton();
+        btnPostAdd = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taPostContent = new javax.swing.JTextArea();
+        lbPostThumbnailIcon = new javax.swing.JLabel();
+        tfPostRedditId = new javax.swing.JTextField();
+        tfPostPubDate = new javax.swing.JTextField();
+        tfPostAuthorName = new javax.swing.JTextField();
+        btnPostChooseImage = new javax.swing.JButton();
+        tfPostThumbnailLink = new javax.swing.JTextField();
+        lbPostContent = new javax.swing.JLabel();
+        lbPostRedditId = new javax.swing.JLabel();
+        lbPostTitle = new javax.swing.JLabel();
+        lbPostPubDate = new javax.swing.JLabel();
+        lbPostAuthorName = new javax.swing.JLabel();
+        lbPostLink = new javax.swing.JLabel();
+        tfPostLink = new javax.swing.JTextField();
+        lbPostSubredditName = new javax.swing.JLabel();
+        tfPostSubredditName = new javax.swing.JTextField();
+        lbPostAuthorLink = new javax.swing.JLabel();
+        tfPostAuthorLink = new javax.swing.JTextField();
+        lbPostUpdateDate = new javax.swing.JLabel();
+        tfPostUpdateDate = new javax.swing.JTextField();
+        lbPostTitleError = new javax.swing.JLabel();
+        lbPostRedditIdError = new javax.swing.JLabel();
+        lbPostAuthorNameError = new javax.swing.JLabel();
+        lbPostPubDateError = new javax.swing.JLabel();
+        lbPostLinkError = new javax.swing.JLabel();
+        lbPostSubredditNameError = new javax.swing.JLabel();
+        lbPostAuthorLinkError = new javax.swing.JLabel();
+        lbPostUpdateDateError = new javax.swing.JLabel();
+        lbPostContentError = new javax.swing.JLabel();
+        lbPostThumbnailLinkError = new javax.swing.JLabel();
+
+        setPreferredSize(new java.awt.Dimension(900, 600));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
+
+        tbPosts.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tbPosts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbPostsMouseClicked(evt);
+            }
+        });
+        tbPosts.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbPostsKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbPosts);
+
+        btnPostDelete.setText("Delete");
+        btnPostDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPostDeleteActionPerformed(evt);
+            }
+        });
+
+        btnPostUpdate.setText("Update");
+        btnPostUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPostUpdateActionPerformed(evt);
+            }
+        });
+
+        btnPostAdd.setText("Add");
+        btnPostAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPostAddActionPerformed(evt);
+            }
+        });
+
+        taPostContent.setColumns(20);
+        taPostContent.setRows(5);
+        jScrollPane2.setViewportView(taPostContent);
+
+        lbPostThumbnailIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no-image.png"))); // NOI18N
+        lbPostThumbnailIcon.setPreferredSize(new java.awt.Dimension(300, 200));
+
+        btnPostChooseImage.setText("Choose");
+        btnPostChooseImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPostChooseImageActionPerformed(evt);
+            }
+        });
+
+        lbPostContent.setText("Content");
+
+        lbPostRedditId.setText("Reddit ID");
+
+        lbPostTitle.setText("Title");
+
+        lbPostPubDate.setText("Published Date");
+
+        lbPostAuthorName.setText("Author Name");
+
+        lbPostLink.setText("Link");
+
+        lbPostSubredditName.setText("Subreddit");
+
+        lbPostAuthorLink.setText("Author Link");
+
+        lbPostUpdateDate.setText("UpdatedDate");
+
+        lbPostTitleError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostTitleError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostTitleError.setText("X");
+
+        lbPostRedditIdError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostRedditIdError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostRedditIdError.setText("X");
+
+        lbPostAuthorNameError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostAuthorNameError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostAuthorNameError.setText("X");
+
+        lbPostPubDateError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostPubDateError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostPubDateError.setText("X");
+
+        lbPostLinkError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostLinkError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostLinkError.setText("X");
+
+        lbPostSubredditNameError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostSubredditNameError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostSubredditNameError.setText("X");
+
+        lbPostAuthorLinkError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostAuthorLinkError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostAuthorLinkError.setText("X");
+
+        lbPostUpdateDateError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostUpdateDateError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostUpdateDateError.setText("X");
+
+        lbPostContentError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostContentError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostContentError.setText("X");
+
+        lbPostThumbnailLinkError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbPostThumbnailLinkError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPostThumbnailLinkError.setText("X");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lbPostAuthorName)
+                                    .addComponent(tfPostPubDate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostPubDate)
+                                    .addComponent(lbPostTitle)
+                                    .addComponent(lbPostRedditId)
+                                    .addComponent(tfPostAuthorName, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfPostRedditId, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfPostTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbPostTitleError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostRedditIdError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostAuthorNameError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostPubDateError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tfPostSubredditName, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbPostSubredditNameError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lbPostSubredditName)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tfPostAuthorLink, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbPostAuthorLinkError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lbPostAuthorLink)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tfPostUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbPostUpdateDateError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lbPostUpdateDate)
+                                    .addComponent(lbPostLink)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tfPostLink, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbPostLinkError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(135, 135, 135))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbPostContent)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 512, Short.MAX_VALUE)))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbPostThumbnailIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lbPostThumbnailLinkError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(1, 1, 1)
+                                .addComponent(tfPostThumbnailLink, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPostChooseImage)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbPostContentError, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPostAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPostUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPostDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))))
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbPostThumbnailIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfPostThumbnailLink, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPostChooseImage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbPostThumbnailLinkError)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbPostTitle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostTitleError))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPostRedditId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostRedditId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostRedditIdError))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPostAuthorName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostAuthorName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostAuthorNameError))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPostPubDate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostPubDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostPubDateError)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbPostLink)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostLink, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostLinkError))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPostSubredditName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostSubredditName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostSubredditNameError))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPostAuthorLink)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostAuthorLink, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostAuthorLinkError))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPostUpdateDate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfPostUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbPostUpdateDateError))))
+                        .addGap(7, 7, 7)
+                        .addComponent(lbPostContent)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnPostAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnPostUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnPostDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lbPostContentError))
+                                .addGap(15, 15, 15)))))
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        init();
+    }//GEN-LAST:event_formComponentShown
+
+    private void btnPostAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostAddActionPerformed
+        if (!formValid()) {
+            return;
+        }
+        try {
+            String localPicturePath = uploadPicture();
+            Post post = new Post(
+                tfPostRedditId.getText().trim(),
+                tfPostTitle.getText().trim(),
+                new Author(
+                    tfPostAuthorName.getText().trim(),
+                    tfPostAuthorLink.getText().trim()
+                ),
+                tfPostLink.getText().trim(),
+                localPicturePath,
+                taPostContent.getText().trim(),
+                OffsetDateTime.parse(tfPostPubDate.getText().trim(), Post.DATE_FORMATTER),
+                OffsetDateTime.parse(tfPostUpdateDate.getText().trim(), Post.DATE_FORMATTER),
+                tfPostSubredditName.getText().trim()
+            );
+            postRepo.createPost(post);
+            postTableModel.setPosts(postRepo.selectPosts());
+            clearForm();
+        } catch (Exception ex) {
+            Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to create post");
+        }
+    }//GEN-LAST:event_btnPostAddActionPerformed
+
+    private void btnPostUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostUpdateActionPerformed
+        if (selectedPost == null) {
+            MessageUtils.showErrorMessage("Wronk operation", "Please choose post first");
+            return;
+        }
+        if (!formValid()) {
+            return;
+        }
+        try {
+            if (!tfPostThumbnailLink.getText().trim().equals(selectedPost.getThumbnailLink())) {
+                if (selectedPost.getThumbnailLink() != null) {
+                    Files.deleteIfExists(Paths.get(selectedPost.getThumbnailLink()));
+                }
+                String localPicturePath = uploadPicture();
+                selectedPost.setThumbnailLink(localPicturePath);
+            }
+            selectedPost.setTitle(tfPostTitle.getText().trim());
+            selectedPost.setLink(tfPostLink.getText().trim());
+            selectedPost.setRedditId(tfPostRedditId.getText().trim());
+            selectedPost.setSubredditName(tfPostSubredditName.getText().trim());
+            selectedPost.setContent(taPostContent.getText().trim());
+            selectedPost.setPublishedDate(OffsetDateTime.parse(tfPostPubDate.getText().trim(), Post.DATE_FORMATTER));
+            selectedPost.setUpdatedDate(OffsetDateTime.parse(tfPostUpdateDate.getText().trim(), Post.DATE_FORMATTER));
+
+            Author author = new Author(tfPostAuthorName.getText().trim(), tfPostAuthorLink.getText().trim());
+            Optional<Author> existingAuthor = authorRepo.selectAuthors().stream()
+                    .filter(a -> author.getName().equals(a.getName()))
+                    .findFirst();
+            if (existingAuthor.isPresent()) {
+                author.setId(existingAuthor.get().getId());
+            } else {
+                int newAuthorId = authorRepo.createAuthor(author);
+                author.setId(newAuthorId);
+            }
+            selectedPost.setAuthor(author);
+            
+            postRepo.updatePost(selectedPost.getId(), selectedPost);
+            postTableModel.setPosts(postRepo.selectPosts());
+            clearForm();
+        } catch (Exception ex) {
+            Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to update post");
+        }
+    }//GEN-LAST:event_btnPostUpdateActionPerformed
+
+    private void btnPostDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostDeleteActionPerformed
+        if (selectedPost == null) {
+            MessageUtils.showErrorMessage("Wronk operation", "Please choose post first");
+            return;
+        }
+        if (MessageUtils.showConfirmDialog("Delete post", "Fr fr?")) {
+            try {
+                if (selectedPost.getThumbnailLink() != null) {
+                    Files.deleteIfExists(Paths.get(selectedPost.getThumbnailLink()));
+                }
+                postRepo.deletePost(selectedPost.getId());
+                postTableModel.setPosts(postRepo.selectPosts());
+                clearForm();
+            } catch (Exception ex) {
+                Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+                MessageUtils.showErrorMessage("Error", "Unable to delete post");
+            }
+        }
+    }//GEN-LAST:event_btnPostDeleteActionPerformed
+
+    private void tbPostsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPostsMouseClicked
+        showPost();
+    }//GEN-LAST:event_tbPostsMouseClicked
+
+    private void tbPostsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbPostsKeyReleased
+        showPost();
+    }//GEN-LAST:event_tbPostsKeyReleased
+
+    private void btnPostChooseImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostChooseImageActionPerformed
+        Optional<File> file = FileUtils.uploadFile("Images", "jpg", "jpeg", "gif", "png");
+        if (!file.isPresent()) {
+            return;
+        }
+        tfPostThumbnailLink.setText(file.get().getAbsolutePath());
+        setIcon(lbPostThumbnailIcon, file.get());
+    }//GEN-LAST:event_btnPostChooseImageActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPostAdd;
+    private javax.swing.JButton btnPostChooseImage;
+    private javax.swing.JButton btnPostDelete;
+    private javax.swing.JButton btnPostUpdate;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbPostAuthorLink;
+    private javax.swing.JLabel lbPostAuthorLinkError;
+    private javax.swing.JLabel lbPostAuthorName;
+    private javax.swing.JLabel lbPostAuthorNameError;
+    private javax.swing.JLabel lbPostContent;
+    private javax.swing.JLabel lbPostContentError;
+    private javax.swing.JLabel lbPostLink;
+    private javax.swing.JLabel lbPostLinkError;
+    private javax.swing.JLabel lbPostPubDate;
+    private javax.swing.JLabel lbPostPubDateError;
+    private javax.swing.JLabel lbPostRedditId;
+    private javax.swing.JLabel lbPostRedditIdError;
+    private javax.swing.JLabel lbPostSubredditName;
+    private javax.swing.JLabel lbPostSubredditNameError;
+    private javax.swing.JLabel lbPostThumbnailIcon;
+    private javax.swing.JLabel lbPostThumbnailLinkError;
+    private javax.swing.JLabel lbPostTitle;
+    private javax.swing.JLabel lbPostTitleError;
+    private javax.swing.JLabel lbPostUpdateDate;
+    private javax.swing.JLabel lbPostUpdateDateError;
+    private javax.swing.JTextArea taPostContent;
+    private javax.swing.JTable tbPosts;
+    private javax.swing.JTextField tfPostAuthorLink;
+    private javax.swing.JTextField tfPostAuthorName;
+    private javax.swing.JTextField tfPostLink;
+    private javax.swing.JTextField tfPostPubDate;
+    private javax.swing.JTextField tfPostRedditId;
+    private javax.swing.JTextField tfPostSubredditName;
+    private javax.swing.JTextField tfPostThumbnailLink;
+    private javax.swing.JTextField tfPostTitle;
+    private javax.swing.JTextField tfPostUpdateDate;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        try {
+            initValidation();
+            clearForm();
+            hideErrors();
+            initRepo();
+            initTable();
+        } catch (Exception ex) {
+            Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
+        }
+    }
+
+    private void initValidation() {
+        validationMap = new HashMap<>();
+        
+        validationMap.put(tfPostTitle, lbPostTitleError);
+        validationMap.put(tfPostLink, lbPostLinkError);
+        validationMap.put(tfPostAuthorName, lbPostAuthorNameError);
+        validationMap.put(tfPostAuthorLink, lbPostAuthorLinkError);
+        validationMap.put(tfPostRedditId, lbPostRedditIdError);
+        validationMap.put(tfPostSubredditName, lbPostSubredditNameError);
+        validationMap.put(tfPostPubDate, lbPostPubDateError);
+        validationMap.put(tfPostUpdateDate, lbPostUpdateDateError);
+        validationMap.put(taPostContent, lbPostContentError);
+        validationMap.put(tfPostThumbnailLink, lbPostThumbnailLinkError);
+    }
+
+    private void hideErrors() {
+        validationMap.forEach((key, val) -> val.setVisible(false));
+    }
+
+    private void initRepo() throws Exception {
+        postRepo = RepositoryFactory.getPostRepo();
+        authorRepo = RepositoryFactory.getAuthorRepo();
+    }
+
+    private void initTable() throws Exception {
+        tbPosts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbPosts.setAutoCreateRowSorter(true);
+        tbPosts.setRowHeight(25);
+        postTableModel = new PostTableModel(postRepo.selectPosts());
+        tbPosts.setModel(postTableModel);
+    }
+    
+    private boolean formValid() {
+        hideErrors();
+        boolean ok = true;
+
+        for (Map.Entry<JTextComponent, JLabel> entry : validationMap.entrySet()) {
+            JTextComponent key = entry.getKey();
+            JLabel val = entry.getValue();
+
+            boolean invalidInput = key.getText().trim().isEmpty();
+            val.setVisible(invalidInput);
+            if (invalidInput) {
+                ok = false;
+            }
+
+            if ("Date".equals(key.getName())) {
+                try {
+                    OffsetDateTime.parse(key.getText().trim(), Post.DATE_FORMATTER);
+                } catch (Exception e) {
+                    ok = false;
+                    val.setVisible(true);
+                }
+            }
+        }
+
+        return ok;
+    }
+    
+    private void clearForm() {
+        hideErrors();
+        validationMap.forEach((key, val) -> key.setText(""));
+        lbPostThumbnailIcon.setIcon(new ImageIcon(getClass().getResource("/"+DIR+"/no-image.png")));
+        selectedPost = null;
+    }
+    
+    private String uploadPicture() throws IOException {
+        String picturePath = tfPostThumbnailLink.getText();
+        String ext = picturePath.substring(picturePath.lastIndexOf("."));
+        String pictureName = UUID.randomUUID() + ext;
+        String localPicturePath = DIR + File.separator + pictureName;
+        
+        FileUtils.copy(picturePath, localPicturePath);
+        return localPicturePath;
+    }
+    
+    private void showPost() {
+        clearForm();
+        int selectedRow = tbPosts.getSelectedRow();
+        int rowIndex = tbPosts.convertRowIndexToModel(selectedRow);
+        int selectedPostId = (int) postTableModel.getValueAt(rowIndex, 0);
+        
+        try {
+            Optional<Post> optPost = postRepo.selectPost(selectedPostId);
+            if (optPost.isPresent()) {
+                selectedPost = optPost.get();
+                fillForm(selectedPost);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to show post");
+        }
+    }
+
+    private void fillForm(Post post) {
+        if (post.getThumbnailLink() != null && Files.exists(Paths.get(post.getThumbnailLink()))) {
+            tfPostThumbnailLink.setText(post.getThumbnailLink());
+            setIcon(lbPostThumbnailIcon, new File(post.getThumbnailLink()));
+        }
+        tfPostTitle.setText(post.getTitle());
+        tfPostLink.setText(post.getLink());
+        tfPostAuthorName.setText(post.getAuthor().getName());
+        tfPostAuthorLink.setText(post.getAuthor().getLink());
+        tfPostRedditId.setText(post.getRedditId());
+        tfPostSubredditName.setText(post.getSubredditName());
+        tfPostPubDate.setText(post.getPublishedDate().format(Post.DATE_FORMATTER));
+        tfPostUpdateDate.setText(post.getUpdatedDate().format(Post.DATE_FORMATTER));
+        taPostContent.setText(post.getContent());
+    }
+
+    private void setIcon(JLabel label, File file) {
+        try {
+            label.setIcon(IconUtils.createIcon(file, label.getWidth(), label.getHeight()));
+        } catch (IOException ex) {
+            Logger.getLogger(EditPost.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to set icon");
+        }
+    }
 }

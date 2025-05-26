@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface PostRepository {
     int createPost(Post post) throws Exception;
     void createPosts(List<Post> posts) throws Exception;
-    void updatePosts(int id, Post post) throws Exception;
+    void updatePost(int id, Post post) throws Exception;
     void deletePost(int id) throws Exception;
     Optional<Post> selectPost(int id) throws Exception;
     List<Post> selectPosts() throws Exception;

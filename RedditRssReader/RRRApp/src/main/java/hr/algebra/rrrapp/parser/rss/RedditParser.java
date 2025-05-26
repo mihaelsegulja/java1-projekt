@@ -66,33 +66,43 @@ public class RedditParser {
                         String qName = startElement.getName().getLocalPart();
                         tagType = TagType.from(qName);
 
-                        if (tagType.isPresent() && tagType.get().equals(TagType.ENTRY)) {
-                            entry = new Entry();
-                            entries.add(entry);
-                        }
-                        if (tagType.isPresent() && tagType.get().equals(TagType.AUTHOR)) {
-                            author = new Author();
-                        }
-                        if (tagType.isPresent() && tagType.get().equals(TagType.MEDIA_THUMBNAIL) && entry != null && entry.getThumbnailLink() == null) {
-                            Attribute atr = startElement.getAttributeByName(new QName("url"));
-                            if (atr != null) {
-                                handlePicture(entry, atr.getValue());
-                            }
-                        }
-                        if (tagType.isPresent() && tagType.get() == TagType.CONTENT) {
-                            insideContent = true;
-                            contentBuilder.setLength(0); // reset buffer
-                        }
-                        if (tagType.isPresent() && tagType.get() == TagType.LINK && entry != null) {
-                            Attribute hrefAttr = startElement.getAttributeByName(new QName("href"));
-                            if (hrefAttr != null) {
-                                entry.setLink(hrefAttr.getValue());
-                            }
-                        }
-                        if (tagType.isPresent() && tagType.get() == TagType.CATEGORY && entry != null) {
-                            Attribute labelAttr = startElement.getAttributeByName(new QName("label"));
-                            if (labelAttr != null) {
-                                entry.setSubredditName(labelAttr.getValue());
+                        if (tagType.isPresent()) {
+                            switch (tagType.get()) {
+                                case ENTRY -> {
+                                    entry = new Entry();
+                                    entries.add(entry);
+                                }
+                                case AUTHOR -> {
+                                    author = new Author();
+                                }
+                                case MEDIA_THUMBNAIL -> {
+                                    if (entry != null && entry.getThumbnailLink() == null) {
+                                        Attribute atr = startElement.getAttributeByName(new QName("url"));
+                                        if (atr != null) {
+                                            handlePicture(entry, atr.getValue());
+                                        }
+                                    }
+                                }
+                                case CONTENT -> {
+                                    insideContent = true;
+                                    contentBuilder.setLength(0); // reset buffer
+                                }
+                                case LINK -> {
+                                    if (entry != null) {
+                                        Attribute hrefAttr = startElement.getAttributeByName(new QName("href"));
+                                        if (hrefAttr != null) {
+                                            entry.setLink(hrefAttr.getValue());
+                                        }
+                                    }
+                                }
+                                case CATEGORY -> {
+                                    if (entry != null) {
+                                        Attribute labelAttr = startElement.getAttributeByName(new QName("label"));
+                                        if (labelAttr != null) {
+                                            entry.setSubredditName(labelAttr.getValue());
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -141,20 +151,30 @@ public class RedditParser {
                     }
                     case XMLStreamConstants.END_ELEMENT -> {
                         String endTag = event.asEndElement().getName().getLocalPart();
-                        if ("author".equals(endTag) && entry != null) {
-                            if (author != null) {
-                                entry.setAuthor(author);
-                                author = null;
+                        Optional<TagType> endTagType = TagType.from(endTag);
+                        
+                        if (endTagType.isPresent()) {
+                            switch (endTagType.get()) {
+                                case AUTHOR -> {
+                                    if (entry != null && author != null) {
+                                        entry.setAuthor(author);
+                                        author = null;
+                                    }
+                                }
+                                case ENTRY -> {
+                                    if (entry != null && entry.getAuthor() == null) {
+                                        entry.setAuthor(DELETED_AUTHOR);
+                                    }
+                                }
+                                case CONTENT -> {
+                                    if (entry != null) {
+                                        String rawHtml = contentBuilder.toString().trim();
+                                        String cleanContent = Jsoup.clean(rawHtml, Safelist.relaxed());
+                                        entry.setContent(cleanContent);
+                                        insideContent = false;
+                                    }
+                                }
                             }
-                        }
-                        if ("entry".equals(endTag) && entry != null && entry.getAuthor() == null) {
-                            entry.setAuthor(DELETED_AUTHOR);
-                        }
-                        if ("content".equals(event.asEndElement().getName().getLocalPart()) && entry != null) {
-                            String rawHtml = contentBuilder.toString().trim();
-                            String cleanContent = Jsoup.clean(rawHtml, Safelist.relaxed());
-                            entry.setContent(cleanContent);
-                            insideContent = false;
                         }
                     }
                 }
