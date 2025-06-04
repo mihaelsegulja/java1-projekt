@@ -22,7 +22,7 @@ public class RedditUrlUtils {
 
         userInput = userInput.trim().toLowerCase();
 
-        // Shorthand: "r/linux" or just "linux"
+        // Shorthand: "r/subname" or just "subname"
         if (!userInput.startsWith("http")) {
             if (userInput.startsWith("r/")) {
                 userInput = userInput.substring(2);

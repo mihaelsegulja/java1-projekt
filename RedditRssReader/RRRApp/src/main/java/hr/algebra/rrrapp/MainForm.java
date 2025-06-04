@@ -7,6 +7,7 @@ package hr.algebra.rrrapp;
 import hr.algebra.dao.model.User;
 import hr.algebra.dao.model.UserRole;
 import hr.algebra.rrrapp.view.Authentication;
+import hr.algebra.rrrapp.view.DragNDrop;
 import hr.algebra.rrrapp.view.EditAuthor;
 import hr.algebra.rrrapp.view.EditComment;
 import hr.algebra.rrrapp.view.EditPost;
@@ -82,6 +83,7 @@ public class MainForm extends javax.swing.JFrame {
     private EditPost editPost;
     private EditAuthor editAuthor;
     private EditComment editComment;
+    private DragNDrop dragNDrop;
     
     private void initTabs() {
         authPanel = new Authentication();
@@ -90,8 +92,9 @@ public class MainForm extends javax.swing.JFrame {
         editPost = new EditPost();
         editAuthor = new EditAuthor();
         editComment = new EditComment();
-
-        authPanel.setOnLoginSuccess(user -> {
+        dragNDrop = new DragNDrop();
+        
+        authPanel.setOnLoginSuccess(user -> { 
             showTabsForUser(user);
             tpMain.remove(authPanel);
         });
@@ -100,13 +103,14 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void showTabsForUser(User user) {
-        tpMain.add("Upload", uploadPanel);
-        tpMain.add("Edit Posts", editPost);
-        tpMain.add("Edit Authors", editAuthor);
-        tpMain.add("Edit Comments", editComment);
-        tpMain.add("Settings", settingsPanel);
-
+        tpMain.add("Drag N Drop", dragNDrop);
+        
         if (user.getUserRoleId() == UserRole.ADMIN.getUserRole()) {
+            tpMain.add("Upload", uploadPanel);
+            tpMain.add("Edit Posts", editPost);
+            tpMain.add("Edit Authors", editAuthor);
+            tpMain.add("Edit Comments", editComment);
+            tpMain.add("Settings", settingsPanel);
         }
     }
 }
