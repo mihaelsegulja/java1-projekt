@@ -13,7 +13,10 @@ import hr.algebra.rrrapp.view.EditComment;
 import hr.algebra.rrrapp.view.EditPost;
 import hr.algebra.rrrapp.view.Settings;
 import hr.algebra.rrrapp.view.UploadContent;
-import java.awt.Component;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -27,6 +30,7 @@ public class MainForm extends javax.swing.JFrame {
     public MainForm() {
         initComponents();
         initTabs();
+        initMenu();
     }
 
     /**
@@ -39,8 +43,33 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
 
         tpMain = new javax.swing.JTabbedPane();
+        mbMain = new javax.swing.JMenuBar();
+        menuApp = new javax.swing.JMenu();
+        miQuit = new javax.swing.JMenuItem();
+        miLogout = new javax.swing.JMenuItem();
+        menuInfo = new javax.swing.JMenu();
+        miAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        menuApp.setText("App");
+
+        miQuit.setText("Quit");
+        menuApp.add(miQuit);
+
+        miLogout.setText("Logout");
+        menuApp.add(miLogout);
+
+        mbMain.add(menuApp);
+
+        menuInfo.setText("Info");
+
+        miAbout.setText("About");
+        menuInfo.add(miAbout);
+
+        mbMain.add(menuInfo);
+
+        setJMenuBar(mbMain);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -52,7 +81,7 @@ public class MainForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tpMain, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         pack();
@@ -74,6 +103,12 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar mbMain;
+    private javax.swing.JMenu menuApp;
+    private javax.swing.JMenu menuInfo;
+    private javax.swing.JMenuItem miAbout;
+    private javax.swing.JMenuItem miLogout;
+    private javax.swing.JMenuItem miQuit;
     private javax.swing.JTabbedPane tpMain;
     // End of variables declaration//GEN-END:variables
 
@@ -112,5 +147,31 @@ public class MainForm extends javax.swing.JFrame {
             tpMain.add("Edit Comments", editComment);
             tpMain.add("Settings", settingsPanel);
         }
+    }
+
+    private void initMenu() {
+        miQuit.addActionListener(e -> System.exit(0));
+        miAbout.addActionListener(e -> JOptionPane.showMessageDialog(
+            this,
+            "Reddit RSS Reader\nAuthor: Mihael Šegulja\nVersion: 1.0",
+            "About",
+            JOptionPane.INFORMATION_MESSAGE
+        ));
+        miLogout.addActionListener(e -> logout());
+        
+        miQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
+        miAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
+        miLogout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK));
+    }
+
+    private void logout() {
+        tpMain.removeAll();
+        
+        authPanel.setOnLoginSuccess(user -> { 
+            showTabsForUser(user);
+            tpMain.remove(authPanel);
+        });
+
+        tpMain.add("Authenticate", authPanel);
     }
 }
